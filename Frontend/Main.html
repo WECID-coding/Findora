@@ -1,0 +1,836 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#0b7a67">
+  <meta name="description" content="SmartCampus MITS Gwalior — a campus-first lost and found platform.">
+  <title>SmartCampus — MITS Gwalior Lost & Found</title>
+
+  <!-- Leaflet provides the map UI; MapLibre renders the OpenFreeMap vector basemap. -->
+  <link
+    rel="stylesheet"
+    href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
+    crossorigin=""
+  >
+
+  <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+  <div class="page-shell">
+
+    <!-- =========================================================
+         HEADER / NAVIGATION
+         ========================================================= -->
+    <header class="site-header" id="top">
+      <div class="container nav-wrap">
+
+        <a class="brand" href="#top" aria-label="SmartCampus home">
+          <span class="brand-mark" aria-hidden="true">
+            <svg viewBox="0 0 32 32" role="img">
+              <path d="M16 3.5 27 8.8v8.9c0 5.2-4.5 9.4-11 11-6.5-1.6-11-5.8-11-11V8.8L16 3.5Z"></path>
+              <path d="m10.7 16.2 3.5 3.4 7.2-7.3"></path>
+            </svg>
+          </span>
+          <span>
+            <strong>SmartCampus</strong>
+            <small>MITS Gwalior</small>
+          </span>
+        </a>
+
+        <nav class="desktop-nav" aria-label="Primary navigation">
+          <a class="nav-link active" href="#home">Home</a>
+          <a class="nav-link" href="#discover">Browse</a>
+          <a class="nav-link" href="#map-section">Map</a>
+          <a class="nav-link" href="#how-it-works">How it works</a>
+        </nav>
+
+        <div class="nav-actions">
+          <button class="icon-btn" id="themeToggle" type="button" aria-label="Toggle dark mode">
+            <span id="themeIcon">☾</span>
+          </button>
+          <button class="outline-btn hide-mobile" type="button" data-open-report="found">
+            I found something
+          </button>
+          <button class="primary-btn nav-report" type="button" data-open-report="lost">
+            Report lost item
+          </button>
+          <button class="menu-btn" id="menuToggle" type="button" aria-label="Open menu" aria-expanded="false">
+            <span></span><span></span><span></span>
+          </button>
+        </div>
+      </div>
+
+      <div class="mobile-nav" id="mobileNav">
+        <a href="#home">Home</a>
+        <a href="#discover">Browse items</a>
+        <a href="#map-section">Campus map</a>
+        <a href="#how-it-works">How it works</a>
+        <button type="button" data-open-report="found">I found something</button>
+        <button type="button" data-open-report="lost">Report lost item</button>
+      </div>
+    </header>
+
+    <main id="home">
+
+      <!-- =======================================================
+           HERO
+           ======================================================= -->
+      <section class="hero-section">
+        <div class="container hero-grid">
+
+          <div class="hero-copy">
+            <div class="eyebrow">
+              <span class="live-dot"></span>
+              MITS Gwalior campus community
+            </div>
+
+            <h1>
+              Lost something?
+              <span>Let's bring it back.</span>
+            </h1>
+
+            <p class="hero-description">
+              Report a lost item, find things already reported, or use the campus
+              map to narrow down where an item was last seen.
+            </p>
+
+            <div class="hero-actions">
+              <button class="primary-btn large" type="button" data-open-report="lost">
+                <span>+</span>
+                Report lost item
+              </button>
+              <button class="secondary-btn large" type="button" data-open-report="found">
+                <span>✓</span>
+                Report found item
+              </button>
+            </div>
+
+            <div class="hero-trust">
+              <div class="avatar-stack" aria-hidden="true">
+                <span>A</span>
+                <span>R</span>
+                <span>S</span>
+                <span>+</span>
+              </div>
+              <p>
+                Built for students, staff and the MITS campus community.
+              </p>
+            </div>
+          </div>
+
+          <div class="hero-visual">
+            <div class="hero-map-card">
+              <div class="map-card-top">
+                <div>
+                  <span class="mini-label">LIVE CAMPUS VIEW</span>
+                  <h2>Where was it seen?</h2>
+                </div>
+                <span class="status-pill">
+                  <span class="status-dot"></span>
+                  Campus
+                </span>
+              </div>
+
+              <div class="hero-map-preview">
+                <div class="fake-road road-a"></div>
+                <div class="fake-road road-b"></div>
+                <div class="fake-road road-c"></div>
+                <div class="fake-building building-a"></div>
+                <div class="fake-building building-b"></div>
+                <div class="fake-building building-c"></div>
+                <div class="fake-building building-d"></div>
+                <div class="map-pin pin-one">
+                  <span>🎒</span>
+                </div>
+                <div class="map-pin pin-two">
+                  <span>🔑</span>
+                </div>
+                <div class="map-pin pin-three">
+                  <span>⌚</span>
+                </div>
+                <div class="map-location-label">
+                  <span class="location-icon">●</span>
+                  MITS Gwalior
+                </div>
+                <div class="map-scale">
+                  <span></span>
+                  200 m
+                </div>
+              </div>
+
+              <div class="map-card-bottom">
+                <div>
+                  <strong>Central Library</strong>
+                  <span>3 reports nearby</span>
+                </div>
+                <button type="button" class="text-btn" data-scroll="#map-section">
+                  Explore map <span>→</span>
+                </button>
+              </div>
+            </div>
+          </div>
+
+        </div>
+      </section>
+
+      <!-- =======================================================
+           QUICK STATS
+           ======================================================= -->
+      <section class="stats-section">
+        <div class="container stats-grid">
+          <div class="stat-card">
+            <span class="stat-icon mint">⌕</span>
+            <div>
+              <strong data-stat="active">24</strong>
+              <span>Active reports</span>
+            </div>
+          </div>
+
+          <div class="stat-card">
+            <span class="stat-icon amber">!</span>
+            <div>
+              <strong data-stat="lost">14</strong>
+              <span>Items reported lost</span>
+            </div>
+          </div>
+
+          <div class="stat-card">
+            <span class="stat-icon blue">✓</span>
+            <div>
+              <strong data-stat="found">10</strong>
+              <span>Items found</span>
+            </div>
+          </div>
+
+          <div class="stat-card">
+            <span class="stat-icon violet">↗</span>
+            <div>
+              <strong data-stat="returned">31</strong>
+              <span>Items reunited</span>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- =======================================================
+           DISCOVERY / SEARCH
+           ======================================================= -->
+      <section class="section discover-section" id="discover">
+        <div class="container">
+
+          <div class="section-heading split-heading">
+            <div>
+              <span class="section-kicker">DISCOVER</span>
+              <h2>Find what you're looking for</h2>
+              <p>
+                Search active reports by item, location or category.
+              </p>
+            </div>
+
+            <button class="ghost-btn" id="clearFilters" type="button">
+              Clear filters
+            </button>
+          </div>
+
+          <div class="search-panel">
+            <div class="search-box">
+              <span class="search-symbol">⌕</span>
+              <input
+                id="searchInput"
+                type="search"
+                placeholder="Search for wallet, ID card, headphones..."
+                autocomplete="off"
+              >
+              <kbd>/</kbd>
+            </div>
+
+            <div class="filter-row">
+              <div class="filter-group">
+                <label for="statusFilter">Status</label>
+                <select id="statusFilter">
+                  <option value="all">All reports</option>
+                  <option value="lost">Lost</option>
+                  <option value="found">Found</option>
+                </select>
+              </div>
+
+              <div class="filter-group">
+                <label for="categoryFilter">Category</label>
+                <select id="categoryFilter">
+                  <option value="all">All categories</option>
+                  <option value="electronics">Electronics</option>
+                  <option value="documents">Documents</option>
+                  <option value="accessories">Accessories</option>
+                  <option value="bags">Bags</option>
+                  <option value="keys">Keys</option>
+                </select>
+              </div>
+
+              <div class="filter-group">
+                <label for="locationFilter">Location</label>
+                <select id="locationFilter">
+                  <option value="all">All campus locations</option>
+                  <option value="library">Central Library</option>
+                  <option value="academic">Academic Block</option>
+                  <option value="canteen">Canteen</option>
+                  <option value="hostel">Hostels</option>
+                  <option value="main-gate">Main Gate</option>
+                </select>
+              </div>
+
+              <button class="filter-map-btn" type="button" data-scroll="#map-section">
+                <span>⌖</span>
+                Map view
+              </button>
+            </div>
+          </div>
+
+          <div class="results-header">
+            <div>
+              <span class="results-count" id="resultsCount">6</span>
+              <span>reports matching your search</span>
+            </div>
+            <button class="sort-btn" type="button" id="sortButton">
+              Recently reported
+              <span>↕</span>
+            </button>
+          </div>
+
+          <div class="items-grid" id="itemsGrid">
+            <!-- Cards are rendered from index.js -->
+          </div>
+
+          <div class="empty-state" id="emptyState" hidden>
+            <div class="empty-icon">⌕</div>
+            <h3>No matching reports</h3>
+            <p>Try a different keyword or remove one of the filters.</p>
+            <button class="secondary-btn" type="button" id="emptyClear">
+              Clear search
+            </button>
+          </div>
+
+          <div class="browse-footer">
+            <button class="outline-btn large" type="button" id="loadMore">
+              Load more reports
+            </button>
+          </div>
+
+        </div>
+      </section>
+
+      <!-- =======================================================
+           MAP SECTION
+           ======================================================= -->
+      <section class="section map-section" id="map-section">
+        <div class="container">
+
+          <div class="map-layout">
+
+            <div class="map-main">
+              <div class="section-heading map-heading">
+                <div>
+                  <span class="section-kicker">CAMPUS MAP</span>
+                  <h2>See reports where they happened</h2>
+                  <p>
+                    Explore lost and found reports around MITS Gwalior instead of
+                    opening another map just to understand the area.
+                  </p>
+                </div>
+
+                <a
+                  class="official-map-link"
+                  href="https://unimap.dotrwt.in/"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                >
+                  Official UniMap ↗
+                </a>
+              </div>
+
+              <div class="interactive-map-shell">
+                <div id="campusMap" aria-label="Interactive MITS Gwalior campus map"></div>
+
+                <div class="map-overlay-controls">
+                  <button class="map-control active" type="button" data-map-filter="all">
+                    All
+                  </button>
+                  <button class="map-control lost-control" type="button" data-map-filter="lost">
+                    Lost
+                  </button>
+                  <button class="map-control found-control" type="button" data-map-filter="found">
+                    Found
+                  </button>
+                </div>
+
+                <div class="map-floating-search">
+                  <span>⌕</span>
+                  <input id="mapSearch" type="text" placeholder="Search campus location">
+                </div>
+
+                <button class="locate-btn" id="locateMe" type="button" title="Use my location">
+                  ◎
+                </button>
+
+                <div class="map-legend">
+                  <span><i class="legend-dot lost-dot"></i> Lost</span>
+                  <span><i class="legend-dot found-dot"></i> Found</span>
+                </div>
+              </div>
+            </div>
+
+            <aside class="map-sidebar">
+              <div class="side-card nearby-card">
+                <div class="side-card-heading">
+                  <div>
+                    <span class="section-kicker">NEARBY</span>
+                    <h3>Reports on campus</h3>
+                  </div>
+                  <span class="count-badge" id="mapReportCount">6</span>
+                </div>
+
+                <div class="nearby-list" id="nearbyList">
+                  <!-- Nearby report rows are rendered by JS -->
+                </div>
+
+                <button class="full-width-btn" type="button" data-scroll="#discover">
+                  Browse all reports
+                </button>
+              </div>
+
+              <div class="side-card tip-card">
+                <span class="tip-icon">💡</span>
+                <div>
+                  <strong>Tip for better matches</strong>
+                  <p>
+                    Add the exact place and approximate time when reporting an item.
+                  </p>
+                </div>
+              </div>
+            </aside>
+
+          </div>
+        </div>
+      </section>
+
+      <!-- =======================================================
+           HOW IT WORKS
+           ======================================================= -->
+      <section class="section how-section" id="how-it-works">
+        <div class="container">
+
+          <div class="section-heading centered-heading">
+            <span class="section-kicker">HOW IT WORKS</span>
+            <h2>From “where is it?” to “got it back.”</h2>
+            <p>
+              Keep the process simple for the person who lost something and the
+              person who found it.
+            </p>
+          </div>
+
+          <div class="steps-grid">
+            <article class="step-card">
+              <div class="step-number">01</div>
+              <div class="step-icon">📷</div>
+              <h3>Report it</h3>
+              <p>
+                Add a photo, short description, location and time. A few useful
+                details are better than a long form.
+              </p>
+            </article>
+
+            <article class="step-card">
+              <div class="step-number">02</div>
+              <div class="step-icon">⌕</div>
+              <h3>Discover matches</h3>
+              <p>
+                Browse reports or search by item, category and campus location.
+              </p>
+            </article>
+
+            <article class="step-card">
+              <div class="step-number">03</div>
+              <div class="step-icon">◎</div>
+              <h3>Verify ownership</h3>
+              <p>
+                Compare identifying details before revealing sensitive contact
+                information.
+              </p>
+            </article>
+
+            <article class="step-card">
+              <div class="step-number">04</div>
+              <div class="step-icon">✓</div>
+              <h3>Get reunited</h3>
+              <p>
+                Coordinate a safe handover and mark the item as returned.
+              </p>
+            </article>
+          </div>
+
+        </div>
+      </section>
+
+      <!-- =======================================================
+           TRUST / FEATURES
+           ======================================================= -->
+      <section class="section trust-section">
+        <div class="container trust-grid">
+
+          <div class="trust-copy">
+            <span class="section-kicker">BUILT FOR CAMPUS</span>
+            <h2>More useful than a message lost in a group chat.</h2>
+            <p>
+              SmartCampus gives every report a structured place, location and
+              searchable description — so students don't have to scroll through
+              old messages hoping someone saw their item.
+            </p>
+
+            <div class="trust-points">
+              <div>
+                <span>✓</span>
+                <p><strong>Photo-first reports</strong><br>See the item before opening a long description.</p>
+              </div>
+              <div>
+                <span>✓</span>
+                <p><strong>Location-aware discovery</strong><br>Use the campus map to narrow the search.</p>
+              </div>
+              <div>
+                <span>✓</span>
+                <p><strong>Human verification</strong><br>Potential matches still need ownership checks.</p>
+              </div>
+            </div>
+          </div>
+
+          <div class="trust-visual">
+            <div class="dashboard-preview">
+              <div class="preview-header">
+                <span class="preview-dot"></span>
+                Potential match
+                <span class="preview-time">2m ago</span>
+              </div>
+
+              <div class="preview-match">
+                <div class="preview-image wallet-image">
+                  <span>👛</span>
+                </div>
+                <div>
+                  <span class="mini-label">FOUND ITEM</span>
+                  <h3>Black leather wallet</h3>
+                  <p>Central Library · Today</p>
+                </div>
+                <span class="match-score">92%</span>
+              </div>
+
+              <div class="match-reasons">
+                <span>✓ Same category</span>
+                <span>✓ Similar location</span>
+                <span>✓ Similar description</span>
+              </div>
+
+              <button class="preview-action" type="button" data-open-report="claim">
+                Check ownership details
+              </button>
+            </div>
+          </div>
+
+        </div>
+      </section>
+
+      <!-- =======================================================
+           FAQ / HELP
+           ======================================================= -->
+      <section class="section faq-section">
+        <div class="container faq-layout">
+
+          <div class="faq-intro">
+            <span class="section-kicker">NEED HELP?</span>
+            <h2>Questions students usually have</h2>
+            <p>
+              The front page should answer the obvious questions before a user
+              has to hunt through another page.
+            </p>
+          </div>
+
+          <div class="faq-list">
+
+            <details>
+              <summary>
+                What should I include in a lost item report?
+                <span>+</span>
+              </summary>
+              <p>
+                Include a clear photo, item category, identifying details,
+                approximate time and the most specific campus location you remember.
+              </p>
+            </details>
+
+            <details>
+              <summary>
+                Can I browse without creating an account?
+                <span>+</span>
+              </summary>
+              <p>
+                This front-end demo keeps browsing open. Authentication can be
+                added when the backend is connected to protect reports and claims.
+              </p>
+            </details>
+
+            <details>
+              <summary>
+                How does a potential match work?
+                <span>+</span>
+              </summary>
+              <p>
+                A future matching service can compare category, description,
+                location, time and image similarity. A match should be treated as
+                a suggestion, not proof of ownership.
+              </p>
+            </details>
+
+            <details>
+              <summary>
+                Is the campus map official?
+                <span>+</span>
+              </summary>
+              <p>
+                The embedded map is an interactive campus view for this page.
+                The official MITS UniMap remains available through the external
+                UniMap link above.
+              </p>
+            </details>
+
+          </div>
+        </div>
+      </section>
+
+      <!-- =======================================================
+           FINAL CTA
+           ======================================================= -->
+      <section class="final-cta">
+        <div class="container final-cta-inner">
+          <div>
+            <span class="section-kicker">READY?</span>
+            <h2>Lost something? Start here.</h2>
+            <p>
+              It takes less than a minute to create a useful report.
+            </p>
+          </div>
+          <div class="final-actions">
+            <button class="primary-btn large" type="button" data-open-report="lost">
+              Report lost item
+            </button>
+            <button class="light-outline-btn large" type="button" data-open-report="found">
+              I found something
+            </button>
+          </div>
+        </div>
+      </section>
+
+    </main>
+
+    <!-- =========================================================
+         FOOTER
+         ========================================================= -->
+    <footer class="site-footer">
+      <div class="container footer-grid">
+
+        <div class="footer-brand">
+          <a class="brand footer-brand-link" href="#top">
+            <span class="brand-mark" aria-hidden="true">
+              <svg viewBox="0 0 32 32">
+                <path d="M16 3.5 27 8.8v8.9c0 5.2-4.5 9.4-11 11-6.5-1.6-11-5.8-11-11V8.8L16 3.5Z"></path>
+                <path d="m10.7 16.2 3.5 3.4 7.2-7.3"></path>
+              </svg>
+            </span>
+            <span>
+              <strong>SmartCampus</strong>
+              <small>MITS Gwalior</small>
+            </span>
+          </a>
+          <p>
+            A student-focused Lost & Found experience for the MITS campus.
+          </p>
+        </div>
+
+        <div class="footer-column">
+          <h3>Explore</h3>
+          <a href="#discover">Browse reports</a>
+          <a href="#map-section">Campus map</a>
+          <a href="#how-it-works">How it works</a>
+        </div>
+
+        <div class="footer-column">
+          <h3>Report</h3>
+          <button type="button" data-open-report="lost">Lost item</button>
+          <button type="button" data-open-report="found">Found item</button>
+          <button type="button" data-open-report="claim">Claim an item</button>
+        </div>
+
+        <div class="footer-column">
+          <h3>Campus map</h3>
+          <a href="https://unimap.dotrwt.in/" target="_blank" rel="noopener noreferrer">
+            Official MITS UniMap ↗
+          </a>
+          <a
+            href="https://www.google.com/maps/search/?api=1&query=Madhav+Institute+of+Technology+and+Science+Gwalior"
+            target="_blank"
+            rel="noopener noreferrer"
+          >
+            Google Maps ↗
+          </a>
+        </div>
+      </div>
+
+      <div class="container footer-bottom">
+        <span>© 2026 SmartCampus Demo</span>
+        <span>Built for a better campus experience.</span>
+      </div>
+    </footer>
+
+  </div>
+
+  <!-- ===========================================================
+       REPORT MODAL
+       =========================================================== -->
+  <div class="modal-backdrop" id="reportModal" aria-hidden="true">
+    <div class="modal-card" role="dialog" aria-modal="true" aria-labelledby="modalTitle">
+
+      <div class="modal-header">
+        <div>
+          <span class="section-kicker" id="modalKicker">REPORT</span>
+          <h2 id="modalTitle">Report a lost item</h2>
+          <p id="modalSubtitle">
+            Give the community enough information to recognize your item.
+          </p>
+        </div>
+        <button class="modal-close" id="modalClose" type="button" aria-label="Close">
+          ×
+        </button>
+      </div>
+
+      <form id="reportForm" novalidate>
+
+        <div class="form-mode">
+          <button type="button" class="mode-btn active" data-report-mode="lost">I lost it</button>
+          <button type="button" class="mode-btn" data-report-mode="found">I found it</button>
+        </div>
+
+        <div class="form-grid">
+          <div class="field full">
+            <label for="itemName">Item name <span>*</span></label>
+            <input id="itemName" name="itemName" type="text" placeholder="e.g. Black wallet" required>
+          </div>
+
+          <div class="field">
+            <label for="itemCategory">Category <span>*</span></label>
+            <select id="itemCategory" name="itemCategory" required>
+              <option value="">Select category</option>
+              <option>Electronics</option>
+              <option>Documents</option>
+              <option>Accessories</option>
+              <option>Bags</option>
+              <option>Keys</option>
+              <option>Other</option>
+            </select>
+          </div>
+
+          <div class="field">
+            <label for="itemDate">Date <span>*</span></label>
+            <input id="itemDate" name="itemDate" type="date" required>
+          </div>
+
+          <div class="field">
+            <label for="itemLocation">Campus location <span>*</span></label>
+            <select id="itemLocation" name="itemLocation" required>
+              <option value="">Select location</option>
+              <option>Central Library</option>
+              <option>Academic Block</option>
+              <option>Main Building</option>
+              <option>Canteen</option>
+              <option>Main Gate</option>
+              <option>Hostel Area</option>
+              <option>Sports Ground</option>
+              <option>Workshop</option>
+              <option>Other</option>
+            </select>
+          </div>
+
+          <div class="field">
+            <label for="itemTime">Approx. time</label>
+            <input id="itemTime" name="itemTime" type="time">
+          </div>
+
+          <div class="field full">
+            <label for="itemDescription">Description <span>*</span></label>
+            <textarea
+              id="itemDescription"
+              name="itemDescription"
+              rows="4"
+              placeholder="Colour, brand, stickers, scratches, unique marks..."
+              required
+            ></textarea>
+          </div>
+
+          <div class="field full">
+            <label for="itemPhoto">Item photo</label>
+            <label class="upload-box" for="itemPhoto">
+              <span class="upload-icon">↑</span>
+              <span>
+                <strong>Upload a clear photo</strong>
+                <small>JPG, PNG or WEBP · up to 5 MB</small>
+              </span>
+              <input id="itemPhoto" name="itemPhoto" type="file" accept="image/png,image/jpeg,image/webp">
+            </label>
+            <div class="photo-preview" id="photoPreview" hidden>
+              <img id="previewImg" alt="Selected item preview">
+              <button type="button" id="removePhoto">Remove photo</button>
+            </div>
+          </div>
+        </div>
+
+        <div class="form-note">
+          <span>🔒</span>
+          <p>
+            Avoid posting sensitive information such as passwords, full card
+            numbers or private documents.
+          </p>
+        </div>
+
+        <div class="modal-actions">
+          <button class="ghost-btn" type="button" id="cancelReport">Cancel</button>
+          <button class="primary-btn" type="submit">
+            Submit report
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- ===========================================================
+       TOAST
+       =========================================================== -->
+  <div class="toast" id="toast" role="status" aria-live="polite">
+    <span class="toast-icon">✓</span>
+    <div>
+      <strong id="toastTitle">Done</strong>
+      <p id="toastMessage">Your action was completed.</p>
+    </div>
+  </div>
+
+  <!-- Leaflet + MapLibre are loaded before index.js. -->
+  <script
+    src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"
+    crossorigin=""
+  ></script>
+  <link
+    rel="stylesheet"
+    href="https://unpkg.com/maplibre-gl@5.9.0/dist/maplibre-gl.css"
+  >
+  <script src="https://unpkg.com/maplibre-gl@5.9.0/dist/maplibre-gl.js"></script>
+  <script src="https://unpkg.com/@maplibre/maplibre-gl-leaflet@0.1.4/dist/leaflet-maplibre-gl.js"></script>
+
+  <script src="script.js"></script>
+</body>
+</html>
